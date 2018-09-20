@@ -1,12 +1,13 @@
 package io.elastic.jdbc
 
 import com.google.gson.JsonObject
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.sql.Connection
 import java.sql.DriverManager
 
-
+@Ignore
 class ColumnNamesProviderPostgresqlSpec extends Specification {
 
     def setup() {
@@ -25,7 +26,7 @@ class ColumnNamesProviderPostgresqlSpec extends Specification {
         connection.close();
     }
 
-    def "get metadata model, given table name" () {
+    def "get metadata model, given table name"() {
 
         JsonObject config = new JsonObject()
         config.addProperty("databaseName", "")
@@ -36,6 +37,7 @@ class ColumnNamesProviderPostgresqlSpec extends Specification {
         config.addProperty("host", "")
         ColumnNamesProvider provider = new ColumnNamesProvider()
 
-        expect: provider.getMetaModel((config)).toString() == "{\"out\":{\"type\":\"object\",\"properties\":{\"id\":{\"required\":false,\"title\":\"id\",\"type\":\"number\"},\"isdead\":{\"required\":false,\"title\":\"isdead\",\"type\":\"boolean\"},\"name\":{\"required\":true,\"title\":\"name\",\"type\":\"string\"},\"radius\":{\"required\":false,\"title\":\"radius\",\"type\":\"number\"},\"destination\":{\"required\":false,\"title\":\"destination\",\"type\":\"number\"}}},\"in\":{\"type\":\"object\",\"properties\":{\"id\":{\"required\":false,\"title\":\"id\",\"type\":\"number\"},\"isdead\":{\"required\":false,\"title\":\"isdead\",\"type\":\"boolean\"},\"name\":{\"required\":true,\"title\":\"name\",\"type\":\"string\"},\"radius\":{\"required\":false,\"title\":\"radius\",\"type\":\"number\"},\"destination\":{\"required\":false,\"title\":\"destination\",\"type\":\"number\"}}}}"
+        expect:
+        provider.getMetaModel((config)).toString() == "{\"out\":{\"type\":\"object\",\"properties\":{\"id\":{\"required\":false,\"title\":\"id\",\"type\":\"number\"},\"isdead\":{\"required\":false,\"title\":\"isdead\",\"type\":\"boolean\"},\"name\":{\"required\":true,\"title\":\"name\",\"type\":\"string\"},\"radius\":{\"required\":false,\"title\":\"radius\",\"type\":\"number\"},\"destination\":{\"required\":false,\"title\":\"destination\",\"type\":\"number\"}}},\"in\":{\"type\":\"object\",\"properties\":{\"id\":{\"required\":false,\"title\":\"id\",\"type\":\"number\"},\"isdead\":{\"required\":false,\"title\":\"isdead\",\"type\":\"boolean\"},\"name\":{\"required\":true,\"title\":\"name\",\"type\":\"string\"},\"radius\":{\"required\":false,\"title\":\"radius\",\"type\":\"number\"},\"destination\":{\"required\":false,\"title\":\"destination\",\"type\":\"number\"}}}}"
     }
 }

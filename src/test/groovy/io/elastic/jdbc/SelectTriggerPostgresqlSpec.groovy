@@ -10,7 +10,7 @@ import spock.lang.*
 import java.sql.Connection
 import java.sql.DriverManager
 
-
+@Ignore
 class SelectTriggerPostgresqlSpec extends Specification {
     @Shared connectionString = ""
     @Shared user = ""

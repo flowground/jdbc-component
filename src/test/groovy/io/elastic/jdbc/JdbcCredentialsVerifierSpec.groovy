@@ -2,8 +2,10 @@ package io.elastic.jdbc
 
 import com.google.gson.JsonObject
 import io.elastic.api.InvalidCredentialsException
+import spock.lang.Ignore
 import spock.lang.Specification
 
+@Ignore
 class JdbcCredentialsVerifierSpec extends Specification {
 
     def "should verify successfully when connection succeeds"() {

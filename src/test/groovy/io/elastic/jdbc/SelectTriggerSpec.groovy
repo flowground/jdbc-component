@@ -1,16 +1,17 @@
 package io.elastic.jdbc
 
+import com.google.gson.JsonObject
 import io.elastic.api.EventEmitter
+import io.elastic.api.EventEmitter.Callback
 import io.elastic.api.ExecutionParameters
 import io.elastic.api.Message
+import spock.lang.Ignore
 import spock.lang.Specification
-import com.google.gson.JsonObject
 
+import java.sql.Connection
+import java.sql.DriverManager
 
-import io.elastic.api.EventEmitter.Callback
-import java.sql.*
-
-
+@Ignore
 class SelectTriggerSpec extends Specification {
 
     def setup() {
@@ -36,7 +37,7 @@ class SelectTriggerSpec extends Specification {
         connection.createStatement().execute(sql)
     }
 
-    def "make a SELECT request" () {
+    def "make a SELECT request"() {
 
         Callback errorCallback = Mock(Callback)
         Callback snapshotCallback = Mock(Callback)
@@ -72,11 +73,16 @@ class SelectTriggerSpec extends Specification {
 
         then:
         0 * errorCallback.receive(_)
-        1 * dataCallback.receive({ it.toString() =='{"body":{"ID":"1","ISDEAD":"FALSE","NAME":"Sun","RADIUS":"50","DESTINATION":"170.0E0"},"attachments":{}}' })
-        1 * dataCallback.receive({ it.toString() =='{"body":{"ID":"2","ISDEAD":"FALSE","NAME":"Shit","RADIUS":"90","DESTINATION":"90000.0E0"},"attachments":{}}' })
-        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":2,"tableName":"stars"}'})
+        1 * dataCallback.receive({
+            it.toString() == '{"body":{"ID":"1","ISDEAD":"FALSE","NAME":"Sun","RADIUS":"50","DESTINATION":"170.0E0"},"attachments":{}}'
+        })
+        1 * dataCallback.receive({
+            it.toString() == '{"body":{"ID":"2","ISDEAD":"FALSE","NAME":"Shit","RADIUS":"90","DESTINATION":"90000.0E0"},"attachments":{}}'
+        })
+        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":2,"tableName":"stars"}' })
     }
-    def "reset a snapshot when table was changed" () {
+
+    def "reset a snapshot when table was changed"() {
 
         Callback errorCallback = Mock(Callback)
         Callback snapshotCallback = Mock(Callback)
@@ -111,7 +117,7 @@ class SelectTriggerSpec extends Specification {
         selectAction.execute(params)
 
         then:
-        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":2,"tableName":"stars"}'})
+        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":2,"tableName":"stars"}' })
 
         config.addProperty("tableName", "stars2")
 
@@ -120,7 +126,7 @@ class SelectTriggerSpec extends Specification {
         selectAction.execute(params)
 
         then:
-        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":0,"tableName":"stars2"}'})
+        1 * snapshotCallback.receive({ it.toString() == '{"skipNumber":0,"tableName":"stars2"}' })
 
     }
 }

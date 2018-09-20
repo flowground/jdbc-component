@@ -1,22 +1,28 @@
 package io.elastic.jdbc
 
 import com.google.gson.JsonObject
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.sql.Connection
 import java.sql.DriverManager
 
-
+@Ignore
 class TableNameProviderSpec extends Specification {
 
-    @Shared def connectionString = "jdbc:hsqldb:mem:tests"
-    @Shared def user = "sa"
-    @Shared def password = ""
+    @Shared
+    def connectionString = "jdbc:hsqldb:mem:tests"
+    @Shared
+    def user = "sa"
+    @Shared
+    def password = ""
 
-    @Shared Connection connection
+    @Shared
+    Connection connection
 
-    @Shared JsonObject config
+    @Shared
+    JsonObject config
 
     def setupSpec() {
         connection = DriverManager.getConnection(connectionString, user, password)
@@ -50,7 +56,8 @@ class TableNameProviderSpec extends Specification {
 
         JsonObject model = provider.getSelectModel(config);
 
-        expect: model.toString() == '{"PUBLIC.ORDERS":"PUBLIC.ORDERS","PUBLIC.PRODUCTS":"PUBLIC.PRODUCTS","PUBLIC.USERS":"PUBLIC.USERS"}'
+        expect:
+        model.toString() == '{"PUBLIC.ORDERS":"PUBLIC.ORDERS","PUBLIC.PRODUCTS":"PUBLIC.PRODUCTS","PUBLIC.USERS":"PUBLIC.USERS"}'
     }
 
 
@@ -60,6 +67,7 @@ class TableNameProviderSpec extends Specification {
 
         JsonObject model = provider.getSelectModel(config);
 
-        expect: model.toString() == '{"":"no tables"}'
+        expect:
+        model.toString() == '{"":"no tables"}'
     }
 }

@@ -1,20 +1,28 @@
 package io.elastic.jdbc
+
 import com.google.gson.JsonObject
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.sql.Connection
 import java.sql.DriverManager
 
+@Ignore
 class TableNameProviderPostgresqlSpec extends Specification {
 
-    @Shared def connectionString = ""
-    @Shared def user = ""
-    @Shared def password = ""
+    @Shared
+    def connectionString = ""
+    @Shared
+    def user = ""
+    @Shared
+    def password = ""
 
-    @Shared Connection connection
+    @Shared
+    Connection connection
 
-    @Shared JsonObject config
+    @Shared
+    JsonObject config
 
     def setupSpec() {
         connection = DriverManager.getConnection(connectionString, user, password)
@@ -46,6 +54,7 @@ class TableNameProviderPostgresqlSpec extends Specification {
         TableNameProvider provider = new TableNameProvider();
 
         JsonObject model = provider.getSelectModel(config);
-        expect: model.toString() == '{"public.decimals":"public.decimals","public.orders":"public.orders","public.products":"public.products","public.tetstable":"public.tetstable","public.users":"public.users","public.pg_stat_statements":"public.pg_stat_statements"}'
+        expect:
+        model.toString() == '{"public.decimals":"public.decimals","public.orders":"public.orders","public.products":"public.products","public.tetstable":"public.tetstable","public.users":"public.users","public.pg_stat_statements":"public.pg_stat_statements"}'
     }
 }
