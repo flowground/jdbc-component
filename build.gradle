@@ -17,11 +17,12 @@ repositories {
 }
 
 dependencies {
-    compile "io.elastic:sailor-jvm:1.1.2"
+    compile "io.elastic:sailor-jvm:2.1.0"
     compile "mysql:mysql-connector-java:5.1.6"
-    compile "postgresql:postgresql:9.0-801.jdbc4"
+    compile "org.postgresql:postgresql:42.2.4"
     compile files("./lib/ojdbc6.jar")
     compile files("./lib/sqljdbc4.jar")
+    compile "com.google.code.gson:gson:2.8.2"
 
     testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
     testCompile 'org.eclipse.jetty:jetty-server:8.1.9.v20130131'
