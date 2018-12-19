@@ -104,8 +104,9 @@
       "dynamicMetadata": "io.elastic.jdbc.ColumnNamesProvider"
     },
     "select": {
+      "deprecated": true,
       "main": "io.elastic.jdbc.triggers.SelectTriggerOld",
-      "title": "SELECT (Deprecated)",
+      "title": "SELECT",
       "description": "This trigger is already deprecated. Please use 'Select' trigger",
       "type": "polling",
       "fields": {
@@ -131,7 +132,6 @@
     }
   },
   "actions": {
-
     "lookupRowByPrimaryKey": {
       "main": "io.elastic.jdbc.actions.LookupRowByPrimaryKey",
       "title": "Lookup Row By Primary Key",
@@ -205,8 +205,9 @@
       "dynamicMetadata": "io.elastic.jdbc.QueryColumnNamesProvider"
     },
     "createOrUpdateRecord": {
+      "deprecated": true,
       "main": "io.elastic.jdbc.actions.CreateOrUpdateRecord",
-      "title": "Create or update record (Deprecated)",
+      "title": "Create or update record",
       "fields": {
         "tableName": {
           "viewClass": "SelectView",
