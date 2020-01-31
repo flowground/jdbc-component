@@ -204,6 +204,8 @@ Following types are supported:
 ![image](https://user-images.githubusercontent.com/40201204/43644974-332f2aa4-9739-11e8-8483-f7395e5d195d.png)
 
 Checkbox ``Don't throw Error on an Empty Result`` allows to emit an empty response, otherwise you will get an error on empty response.
+
+Checkbox ``Emit as Array`` will emit the ResultSet as a json array.
  
 #### Input fields description
 Component supports dynamic incoming metadata - as soon as your query is in place it will be parsed and incoming metadata will be generated accordingly.
