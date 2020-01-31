@@ -9,9 +9,8 @@ import io.elastic.jdbc.utils.Utils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonString;
+import javax.json.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +20,7 @@ public class SelectAction implements Module {
   private static final String SQL_QUERY_VALUE = "sqlQuery";
   private static final String PROPERTY_NULLABLE_RESULT = "nullableResult";
   private static final String PROPERTY_SKIP_NUMBER = "skipNumber";
+  private static final String PROPERTY_EMIT_AS_ARRAY = "emitAsArray";
 
   @Override
   public void execute(ExecutionParameters parameters) {
@@ -32,6 +32,7 @@ public class SelectAction implements Module {
     String sqlQuery = configuration.getString("sqlQuery");
     Integer skipNumber = 0;
     Boolean nullableResult = false;
+    Boolean emitAsArray = false;
 
     if (Utils.getNonNullString(configuration, PROPERTY_NULLABLE_RESULT).equals("true")) {
       nullableResult = true;
@@ -41,6 +42,12 @@ public class SelectAction implements Module {
 
     if (snapshot.get(PROPERTY_SKIP_NUMBER) != null) {
       skipNumber = snapshot.getInt(PROPERTY_SKIP_NUMBER);
+    }
+
+    if (Utils.getNonNullString(configuration, PROPERTY_EMIT_AS_ARRAY).equals("true")) {
+      emitAsArray = true;
+    } else if (Utils.getNonNullString(snapshot, PROPERTY_EMIT_AS_ARRAY).equals("true")) {
+      emitAsArray = true;
     }
 
     Utils.columnTypes = Utils.getVariableTypes(sqlQuery);
@@ -55,11 +62,29 @@ public class SelectAction implements Module {
       try(Connection connection = Utils.getConnection(configuration)){
         resultList = query.executeSelectQuery(connection, sqlQuery, body);
       }
-      for (int i = 0; i < resultList.size(); i++) {
-        LOGGER.info("Columns count: {} from {}", i + 1, resultList.size());
-        LOGGER.info("Emitting data {}", resultList.get(i).toString());
+
+
+      if(emitAsArray) {
+
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (int i=0; i < resultList.size(); i++) {
+          builder.add(resultList.get(i));
+        }
+
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        objectBuilder.add("resultSet", builder);
+        JsonObject object = objectBuilder.build();
+
+        LOGGER.info("Emitting data {}", object.toString());
         parameters.getEventEmitter()
-            .emitData(new Message.Builder().body(resultList.get(i)).build());
+                .emitData(new Message.Builder().body(object).build());
+      } else {
+        for (int i = 0; i < resultList.size(); i++) {
+          LOGGER.info("Columns count: {} from {}", i + 1, resultList.size());
+          LOGGER.info("Emitting data {}", resultList.get(i).toString());
+          parameters.getEventEmitter()
+                  .emitData(new Message.Builder().body(resultList.get(i)).build());
+        }
       }
 
       if (resultList.size() == 0 && nullableResult) {

@@ -283,6 +283,10 @@
         "nullableResult": {
           "label": "Don`t throw Error on an Empty Result",
           "viewClass": "CheckBoxView"
+        },
+        "emitAsArray": {
+          "label": "Emit as Array",
+          "viewClass": "CheckBoxView"
         }
       },
       "dynamicMetadata": "io.elastic.jdbc.providers.QueryColumnNamesProvider"
